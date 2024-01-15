@@ -41,10 +41,11 @@ def blockunder():
     block = bot.blockAt(bot.entity.position.offset(0, -1, 0))
     return block
 def kakoi_uygolb():
+    i = 0
     for item in bot.inventory.items():
         if item.name == 'diamond':
-
-            return item.slot
+            return i
+        i += 1
         
 @On(bot, 'spawn')
 def handle(*args):
@@ -82,10 +83,10 @@ def handle(*args):
             if 'алмазики выкидовай' in message:
                 inventory = bot.inventory
                 index = kakoi_uygolb()
-                for i in range(40):
-                    bot.tossStack(inventory.items()[i], 1)
-                   
-                    print(i,index)
+                #print(index)
+                #print(inventory.items()[index])
+                bot.tossStack(inventory.items()[index], 1)
+
 once(bot, 'login')
 
 #bot.setControlState('sprint', True)
@@ -99,4 +100,3 @@ def say_block_under():
     block = bot.blockAt(bot.players[username].entity.position.offset(0, -1, 0))
     bot.chat(f"Block under you is {block.displayName} in the {block.biome.name} biome")
     print(block)
-
