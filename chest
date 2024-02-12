@@ -1,0 +1,104 @@
+from javascript import require, On, Once, AsyncTask, once, off
+from time import sleep
+
+mineflayer = require('mineflayer')
+pathfinder = require('mineflayer-pathfinder')
+
+RANGE_GOAL = 0
+BOT_USERNAME = '666'
+
+#bot = mineflayer.createBot({ 'host': '26.6.17.205', 'port': 25565, 'username': '666', 'hideErrors': False })
+
+
+bot = mineflayer.createBot({ 'host': '83.147.245.230', 'port': 25565, 'username': '666', 'hideErrors': False,'checkTimeoutInterval': 60 * 1000000 })
+
+bot.loadPlugin(pathfinder.pathfinder)
+
+def check_chest_aroud():
+    #i - id блока
+    i = 54
+    return bot.findBlocks({'point':bot.entity.position, 'matching':i,'maxDistance':50})
+
+def blockface(playerName):
+    if playerName == BOT_USERNAME:
+        return bot.blockAt(bot.entity.position.offset(0, 0, 0))#в какую сторону смотри бот +-
+        #можно сделать чтобы бот вставал на алмазики
+        # функции с инвентарем 
+    else:
+        return bot.blockAt(bot.players[playerName].entity.position.offset(0, -1, 0))
+
+def dig_down():
+    #try:
+    while bot.canDigBlock(blockunder()):
+        print("я копаю")
+        bot.dig(blockunder())
+
+    bot.chat("Can't dig deeper")
+    #except Exception:
+        #bot.chat("Stopped digging")
+        
+def blockunder():
+    block = bot.blockAt(bot.entity.position.offset(0, -1, 0))
+    return block
+def kakoi_uygolb():
+    i = 0
+    for item in bot.inventory.items():
+        if item.name == 'diamond':
+            return i
+        i += 1
+        
+@On(bot, 'spawn')
+def handle(*args):
+    print("666 spawned 👋")   
+    @On(bot, 'chat')
+    def handleMsg(this, sender, message, *args):
+        movements = pathfinder.Movements(bot)
+        print("Получил сообщение", sender, message)
+        if sender and (sender != BOT_USERNAME):
+            bot.chat('Ты сказал: ' + message)
+            if 'сундук' in message:
+                chest = check_chest_aroud()
+                pos = chest[0]
+                bot.pathfinder.setGoal(pathfinder.goals.GoalNear(pos.x, pos.y, pos.z, 0))
+            if 'клади' in message:
+                chest = check_chest_aroud()
+                pos = chest[0]
+                print(pos)
+                put_items_in_chest([pos.x,pos.y,pos.z])
+
+# Функция для кладения предметов в сундук
+def put_items_in_chest(chest_pos):
+    print('aboba') 
+    block = bot.blockAt(chest_pos)
+    print(block.name)
+    if block and block.name == 'chest':
+        chest = bot.openChest(block)
+        
+        items = [
+            {'name': 'diamond', 'count': 1},
+            {'name': 'iron_ingot', 'count': 32}
+            # Добавьте здесь другие предметы, которые бот будет класть в сундук
+        ]
+
+        for item_data in items:
+            item = bot.inventory.findInventoryItem(item_data['name'])
+            if item:
+                bot.moveSlotItem(item.slot, chest.container, item_data['count'])
+
+        chest.close()
+    else:
+        print("No chest found at the specified position")
+
+once(bot, 'login')
+
+#bot.setControlState('sprint', True)
+
+
+#target = bot.blockAt(bot.entity.position.offset(0, -1, 0))
+#print(target)
+#print(bot.entity.position.offset(0, -1, 0))
+
+def say_block_under():
+    block = bot.blockAt(bot.players[username].entity.position.offset(0, -1, 0))
+    bot.chat(f"Block under you is {block.displayName} in the {block.biome.name} biome")
+    print(block)
