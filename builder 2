@@ -1,0 +1,86 @@
+import mcpi.minecraft as minecraft
+import mcpi.entity as entity
+import collections
+from random import* 
+collections.Iterable = collections.abc.Iterable
+
+from time import sleep
+
+#mc = minecraft.Minecraft.create("localhost", 4711)
+mc = minecraft.Minecraft.create('83.147.245.230', 4711)
+mc.postToChat('6')
+#print(entity.SLIME)
+
+#mc.spawnEntity(*mc.player.getPos(),entity.SLIME.id)
+
+'''
+while True:
+    chatEvent = mc.events.pollChatPosts()
+    print(chatEvent)
+    sleep(10)
+'''
+
+# Установка блока земли
+#mc.setBlock(*mc.player.getPos(), 2)
+ #mc.setBlock(*mc.player.getPos(), 113)
+
+#крепость
+from javascript import require, On, Once, AsyncTask, once, off
+from time import sleep
+
+mineflayer = require('mineflayer')
+pathfinder = require('mineflayer-pathfinder')
+
+RANGE_GOAL = 0
+BOT_USERNAME = 'vainvay'
+
+bot = mineflayer.createBot({ 'host': '83.147.245.230', 'port': 25565, 'username': 'vainvay', 'hideErrors': False,'checkTimeoutInterval': 60 * 1000000 })
+
+def bastion ():
+    startx,starty,startz = mc.player.getPos()
+    startx = int(startx)
+    starty = int(starty)
+    startz = int(startz)
+    wherex = startx + 20
+    #пол
+    h = 14
+    w1,w2 = 30,30
+    for x in range(w1):
+        for z in range(w2):  
+            if  x == 0 or x == w1-1 or z == 0 or z == w2-1:
+                for y in range (h+randint(-1,1)): 
+                    mc.setBlock(wherex + x,starty + y,startz + z,112 )
+                    
+            else :
+                mc.setBlock(wherex + x,starty,startz + z,112 )
+    
+    
+    #золотые блоки
+    
+    max_h = 4
+    skolko_blokov_otvet_dothiga = 8
+    for i in range (40):
+        x = randint(wherex,wherex+w1)
+        z = randint(startz,startz+w2)
+        y = randint(starty,starty+max_h)
+        mc.setBlock(x,y,z,41)
+    #сундук 
+    chestx,chesty,chestz = wherex+w1//2,starty+1 ,startz+w1//2
+    mc.setBlock (chestx,chesty,chestz,54)
+
+    #двери  починить   
+    doorx,doory,doorz = wherex+5,starty+1 ,startz+5
+    airx,airy,airz = wherex+5,starty+2 ,startz+5
+    mc.setBlock(airx,airy,airz ,0 )
+    mc.setBlock(doorx,doory,doorz ,64 ) 
+    once(bot, 'login')
+    #заходит и ливает
+bastion()
+def clear ():
+    startx,starty,startz = mc.player.getPos()
+    for x in range (-61,61):
+        for y in range(-30,30):
+            for z in range(-51,51):
+                mc.setBlock(startx + x,starty + y,startz + z,0 )
+    
+#clear()
