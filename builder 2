@@ -1,5 +1,6 @@
 import mcpi.minecraft as minecraft
 import mcpi.entity as entity
+import mcpi.block as block
 import collections
 from random import* 
 collections.Iterable = collections.abc.Iterable
@@ -71,16 +72,19 @@ def bastion ():
     #двери  починить   
     doorx,doory,doorz = wherex+5,starty+1 ,startz+5
     airx,airy,airz = wherex+5,starty+2 ,startz+5
-    mc.setBlock(airx,airy,airz ,0 )
-    mc.setBlock(doorx,doory,doorz ,64 ) 
-    once(bot, 'login')
+    
+    mc.setBlock(doorx,doory,doorz,64 ,6) 
+    mc.setBlock(airx,airy,airz ,64,13)
+    #once(bot, 'login')
     #заходит и ливает
-bastion()
+
 def clear ():
     startx,starty,startz = mc.player.getPos()
     for x in range (-61,61):
-        for y in range(-30,30):
+        for y in range(-70,30):
             for z in range(-51,51):
                 mc.setBlock(startx + x,starty + y,startz + z,0 )
     
-#clear()
+    
+clear()
+bastion()
